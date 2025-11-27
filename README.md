@@ -67,8 +67,8 @@ The devcontainer includes recommended extensions for:
 The repository includes pre-configured MCP servers in `.vscode/mcp.json`:
 
 - **Azure MCP Server**: Interact with Azure resources using natural language through GitHub Copilot
-- **GitHub MCP Server**: Interact with GitHub repositories and workflows
-- **Filesystem MCP Server**: File system operations for the workspace
+- **GitHub MCP Server**: Managed GitHub MCP endpoint for repository and workflow interactions
+- **Microsoft Learn MCP Server**: Access official Microsoft documentation and code samples
 
 To use MCP with GitHub Copilot:
 1. Open Copilot Chat in VS Code
