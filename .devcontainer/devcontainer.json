@@ -24,7 +24,6 @@
     "vscode": {
       "extensions": [
         "ms-azuretools.vscode-bicep",
-        "ms-vscode.azure-account",
         "ms-azuretools.vscode-azureappservice",
         "ms-azuretools.vscode-azurefunctions",
         "ms-azuretools.vscode-azureresourcegroups",
@@ -45,7 +44,8 @@
         "ms-vscode.azurecli",
         "davidanson.vscode-markdownlint",
         "editorconfig.editorconfig",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "johnpapa.vscode-peacock"
       ],
       "settings": {
         "editor.formatOnSave": true,
