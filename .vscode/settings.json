@@ -1,0 +1,30 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[bicep]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-bicep"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "chat.mcp.autostart": true,
+  "azure.resourceFilter": [],
+  "azureFunctions.showProjectWarning": false,
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "files.associations": {
+    "*.bicep": "bicep",
+    "*.bicepparam": "bicep"
+  },
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  }
+}
