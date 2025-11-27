@@ -5,6 +5,9 @@ set -e
 
 echo "🚀 Setting up Azure SRE Agent development environment..."
 
+# Get the workspace directory (default to current directory)
+WORKSPACE_DIR="${WORKSPACE_DIR:-$(pwd)}"
+
 # Update system packages
 sudo apt-get update && sudo apt-get upgrade -y
 
@@ -18,7 +21,13 @@ az bicep version
 
 # Install Azure Developer CLI (azd)
 echo "📦 Installing Azure Developer CLI..."
-curl -fsSL https://aka.ms/install-azd.sh | bash
+AZD_INSTALLER="/tmp/install-azd.sh"
+if curl -fsSL https://aka.ms/install-azd.sh -o "$AZD_INSTALLER"; then
+  bash "$AZD_INSTALLER"
+  rm -f "$AZD_INSTALLER"
+else
+  echo "⚠️  Failed to download Azure Developer CLI installer, skipping..."
+fi
 
 # Install Azure MCP Server package globally for agentic tooling
 echo "📦 Installing Azure MCP Server for agentic tooling..."
@@ -30,17 +39,27 @@ npm install -g typescript ts-node
 
 # Set up Azure CLI extensions for SRE and monitoring
 echo "📦 Installing additional Azure CLI extensions..."
-az extension add --name monitor-control-service --yes || true
-az extension add --name log-analytics --yes || true
-az extension add --name amg --yes || true
+install_az_extension() {
+  local ext_name="$1"
+  if ! az extension show --name "$ext_name" &>/dev/null; then
+    echo "  Installing $ext_name..."
+    az extension add --name "$ext_name" --yes
+  else
+    echo "  $ext_name already installed"
+  fi
+}
+
+install_az_extension "monitor-control-service"
+install_az_extension "log-analytics"
+install_az_extension "amg"
 
 # Ensure MCP configuration directory exists
 echo "🔧 Verifying MCP configuration..."
-mkdir -p /workspaces/sre-agent/.vscode
+mkdir -p "${WORKSPACE_DIR}/.vscode"
 
 # Check if MCP config exists, if not create a basic one
-if [ ! -f /workspaces/sre-agent/.vscode/mcp.json ]; then
-  cat > /workspaces/sre-agent/.vscode/mcp.json << 'EOF'
+if [ ! -f "${WORKSPACE_DIR}/.vscode/mcp.json" ]; then
+  cat > "${WORKSPACE_DIR}/.vscode/mcp.json" << 'EOF'
 {
   "servers": {
     "Azure MCP Server": {
