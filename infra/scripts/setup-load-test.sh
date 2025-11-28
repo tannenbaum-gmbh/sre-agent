@@ -81,7 +81,8 @@ if az load test show --load-test-resource "$LOAD_TEST_RESOURCE" --resource-group
         --test-id "$TEST_ID" \
         --display-name "SRE Agent Load Test" \
         --description "Automated load test for SRE Agent demo - simulates user traffic with random button clicks" \
-        --engine-instances "$ENGINE_INSTANCES"
+        --engine-instances "$ENGINE_INSTANCES" \
+        --test-plan "$TEMP_JMX"
 else
     az load test create \
         --load-test-resource "$LOAD_TEST_RESOURCE" \
