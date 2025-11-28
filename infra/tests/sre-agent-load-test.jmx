@@ -3,8 +3,7 @@
   SRE Agent Load Test Script
 
   This JMeter test script simulates user load on the SRE Agent demo application.
-  Users click increment 5-8 times in a row, then occasionally reset.
-  This pattern ensures the app's error condition (5 consecutive increments) is triggered.
+  Users continuously click increment to trigger the app's error condition (5 consecutive increments).
 
   Configuration (via user properties):
   - threadCount: Number of virtual users (default: 50)
@@ -103,42 +102,6 @@
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-        </hashTree>
-
-        <!-- HTTP Request - Safe/Reset Button (after increment sequence) -->
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Reset (safe=1)" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="safe" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">1</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">safe</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol"></stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <!-- Longer pause after reset before starting again (2-5 sec) -->
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Reset Pause (2-5 sec)" enabled="true">
-            <stringProp name="ConstantTimer.delay">2000</stringProp>
-            <stringProp name="RandomTimer.range">3000</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
         </hashTree>
 
         <!-- Response Assertion - Check for successful response -->
