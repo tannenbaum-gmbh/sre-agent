@@ -36,6 +36,9 @@
     "enableChaosStudio": {
       "value": true
     },
+    "enableLoadTesting": {
+      "value": true
+    },
     "chaosExperimentDuration": {
       "value": "PT10M"
     },

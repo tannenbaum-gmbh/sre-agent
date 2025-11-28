@@ -55,6 +55,9 @@ param enableApplicationInsights bool = true
 @description('Optional. Enable Chaos Studio experiment.')
 param enableChaosStudio bool = true
 
+@description('Optional. Enable Azure Load Testing.')
+param enableLoadTesting bool = true
+
 @description('Optional. Duration of the chaos experiment (ISO 8601 format).')
 param chaosExperimentDuration string = 'PT10M'
 
@@ -118,6 +121,19 @@ module chaosStudio 'modules/chaos-studio.bicep' = {
   }
 }
 
+// Load Testing Module
+module loadTesting 'modules/load-testing.bicep' = {
+  scope: rg
+  name: '${uniqueString(deployment().name, location)}-loadtest'
+  params: {
+    namePrefix: namePrefix
+    location: location
+    tags: tags
+    enableLoadTesting: enableLoadTesting
+    targetWebAppUrl: 'app-${namePrefix}.azurewebsites.net'
+  }
+}
+
 // Outputs
 @description('The name of the resource group.')
 output resourceGroupName string = rg.name
@@ -145,6 +161,12 @@ output chaosExperimentName string = enableChaosStudio ? chaosStudio.outputs.expe
 
 @description('The resource ID of the Log Analytics workspace.')
 output logAnalyticsWorkspaceId string = deployLogAnalytics ? logAnalytics!.outputs.resourceId : ''
+
+@description('The resource ID of the Load Testing resource.')
+output loadTestId string = enableLoadTesting ? loadTesting.outputs.loadTestId : ''
+
+@description('The name of the Load Testing resource.')
+output loadTestName string = enableLoadTesting ? loadTesting.outputs.loadTestName : ''
 
 @description('Instructions for SRE Agent setup.')
 output sreAgentInstructions string = '''
