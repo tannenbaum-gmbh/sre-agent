@@ -170,11 +170,24 @@ resource webAppSourceControl 'Microsoft.Web/sites/sourcecontrols@2023-12-01' = {
   name: '${webAppName}/web'
   dependsOn: [
     webApp
+    mainSlotAppSettings
   ]
   properties: {
     repoUrl: externalGitRepoUrl
     branch: externalGitBranch
     isManualIntegration: true
+  }
+}
+
+// Configure app settings for main slot (Application Insights)
+resource mainSlotAppSettings 'Microsoft.Web/sites/config@2023-12-01' = {
+  name: '${webAppName}/appsettings'
+  dependsOn: [
+    webApp
+  ]
+  properties: {
+    APPLICATIONINSIGHTS_CONNECTION_STRING: enableApplicationInsights ? appInsights!.properties.ConnectionString : ''
+    ApplicationInsightsAgent_EXTENSION_VERSION: '~3'
   }
 }
 
@@ -203,6 +216,7 @@ resource brokenSlotAppSettings 'Microsoft.Web/sites/slots/config@2023-12-01' = i
   properties: {
     INJECT_ERROR: '1'
     APPLICATIONINSIGHTS_CONNECTION_STRING: enableApplicationInsights ? appInsights!.properties.ConnectionString : ''
+    ApplicationInsightsAgent_EXTENSION_VERSION: '~3'
   }
 }
 
