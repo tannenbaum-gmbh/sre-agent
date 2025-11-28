@@ -39,6 +39,12 @@
     "enableLoadTesting": {
       "value": true
     },
+    "enableMonitorAlerts": {
+      "value": true
+    },
+    "http5xxErrorThreshold": {
+      "value": 10
+    },
     "chaosExperimentDuration": {
       "value": "PT10M"
     },

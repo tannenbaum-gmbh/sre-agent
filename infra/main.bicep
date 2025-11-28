@@ -61,6 +61,13 @@ param enableChaosStudio bool = true
 @description('Optional. Enable Azure Load Testing.')
 param enableLoadTesting bool = true
 
+@description('Optional. Enable Azure Monitor alerts for SRE Agent.')
+param enableMonitorAlerts bool = true
+
+@description('Optional. Threshold for HTTP 5xx errors to trigger alert.')
+@minValue(1)
+param http5xxErrorThreshold int = 10
+
 @description('Optional. Duration of the chaos experiment (ISO 8601 format).')
 param chaosExperimentDuration string = 'PT10M'
 
@@ -138,6 +145,19 @@ module loadTesting 'modules/load-testing.bicep' = {
   }
 }
 
+// Azure Monitor Alert Module
+module azureMonitorAlert 'modules/azure-monitor-alert.bicep' = {
+  scope: rg
+  name: '${uniqueString(deployment().name, location)}-monitor-alert'
+  params: {
+    namePrefix: namePrefix
+    tags: tags
+    appServiceResourceId: appService.outputs.webAppId
+    enableMonitorAlerts: enableMonitorAlerts
+    http5xxErrorThreshold: http5xxErrorThreshold
+  }
+}
+
 // Outputs
 @description('The name of the resource group.')
 output resourceGroupName string = rg.name
@@ -171,6 +191,12 @@ output loadTestId string = enableLoadTesting ? loadTesting.outputs.loadTestId : 
 
 @description('The name of the Load Testing resource.')
 output loadTestName string = enableLoadTesting ? loadTesting.outputs.loadTestName : ''
+
+@description('The resource ID of the HTTP 5xx alert.')
+output http5xxAlertId string = enableMonitorAlerts ? azureMonitorAlert.outputs.http5xxAlertId : ''
+
+@description('The name of the HTTP 5xx alert.')
+output http5xxAlertName string = enableMonitorAlerts ? azureMonitorAlert.outputs.http5xxAlertName : ''
 
 @description('Instructions for SRE Agent setup.')
 output sreAgentInstructions string = '''
