@@ -44,10 +44,13 @@ param appServiceSkuName string = 'S1'
 param runtimeStack string = 'DOTNETCORE|9.0'
 
 @description('Optional. External Git repository URL for deployment.')
-param externalGitRepoUrl string = 'https://github.com/Azure-Samples/app-service-dotnet-agent-tutorial'
+param externalGitRepoUrl string = 'https://github.com/tannenbaum-gmbh/sre-agent'
 
 @description('Optional. Branch of the external Git repository.')
 param externalGitBranch string = 'main'
+
+@description('Optional. Path to the application source code within the repository.')
+param appSourcePath string = 'src/SreAgentDemo'
 
 @description('Optional. Enable Application Insights.')
 param enableApplicationInsights bool = true
@@ -102,6 +105,7 @@ module appService 'modules/app-service.bicep' = {
     runtimeStack: runtimeStack
     externalGitRepoUrl: externalGitRepoUrl
     externalGitBranch: externalGitBranch
+    appSourcePath: appSourcePath
     enableApplicationInsights: enableApplicationInsights
     logAnalyticsWorkspaceId: deployLogAnalytics ? logAnalytics!.outputs.resourceId : ''
   }
