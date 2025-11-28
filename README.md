@@ -8,6 +8,7 @@ This repository includes Bicep Infrastructure as Code (IaC) to deploy the comple
 
 - **Azure App Service** with deployment slots for failure simulation
 - **Azure Chaos Studio** for chaos engineering experiments
+- **Azure Load Testing** for simulating user traffic
 - **Application Insights** for monitoring
 - **Log Analytics Workspace** for diagnostics
 
@@ -20,7 +21,7 @@ az login --tenant <yourtenant>
 # Deploy the infrastructure (subscription-level deployment)
 az deployment sub create \
   --name sre-agent-demo-resources \
-  --location eastus2 \
+  --location swedencentral \
   --template-file infra/main.bicep \
   --parameters infra/main.parameters.json
 ```
@@ -37,6 +38,7 @@ Edit `infra/main.parameters.json` to customize:
 | `appServiceSkuName`         | App Service Plan SKU     | `S1`                |
 | `runtimeStack`              | Web app runtime          | `DOTNETCORE\|9.0`   |
 | `enableChaosStudio`         | Deploy Chaos Studio      | `true`              |
+| `enableLoadTesting`         | Deploy Load Testing      | `true`              |
 | `enableApplicationInsights` | Enable App Insights      | `true`              |
 
 ### Azure Verified Modules (AVM)
@@ -90,6 +92,39 @@ For detailed setup instructions, see [Tutorial: Troubleshoot an App Service app 
    - Navigate to **Chaos Studio > Experiments**
    - Select the chaos experiment
    - Click **Start** to test App Service resilience
+
+### Load Testing Setup
+
+After deploying the infrastructure, set up Azure Load Testing to simulate user traffic:
+
+```bash
+# Configure the load test (creates test and uploads JMeter script)
+./infra/scripts/setup-load-test.sh rg-sre-agent-demo lt-sreagent app-sreagent.azurewebsites.net
+```
+
+This creates a load test with:
+
+- **50 virtual users** simulating concurrent traffic
+- **30-minute duration** with 60-second ramp-up
+- **Random requests** to `/?crash=1` (Increment) and `/?safe=1` (Reset)
+- **0.5-5 second delays** between requests
+
+To run the load test:
+
+```bash
+# Via Azure CLI
+az load test-run create \
+  --load-test-resource lt-sreagent \
+  --resource-group rg-sre-agent-demo \
+  --test-id sre-agent-load-test \
+  --test-run-id "run-$(date +%Y%m%d-%H%M%S)"
+```
+
+Or use the Azure Portal:
+
+1. Navigate to **Load Testing > lt-sreagent**
+2. Select **sre-agent-load-test**
+3. Click **Run**
 
 ---
 
