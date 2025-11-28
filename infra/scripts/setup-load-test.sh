@@ -66,7 +66,7 @@ echo ""
 
 # Create a temporary JMX file with the target URL configured
 echo -e "${YELLOW}Configuring JMX test plan with target URL...${NC}"
-TEMP_JMX="/tmp/sre-agent-load-test-configured.jmx"
+TEMP_JMX="$(mktemp /tmp/sre-agent-load-test-XXXXXX.jmx)"
 sed -e "s/app-sreagent\.azurewebsites\.net/$TARGET_URL/g" "$JMX_FILE" > "$TEMP_JMX"
 echo -e "${GREEN}✓ JMX configured for https://$TARGET_URL${NC}"
 echo ""
