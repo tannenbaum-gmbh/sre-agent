@@ -2,6 +2,39 @@
 
 Repo to consolidate Azure SRE Agent demos and resources
 
+## Sample Application
+
+This repository includes a .NET 9 web application (`src/SreAgentDemo`) that demonstrates Azure App Service deployment slots, error simulation, and integration with the Azure SRE (Site Reliability Engineering) Agent for AI-assisted troubleshooting.
+
+### How the Demo App Works
+
+- **Normal Mode**: The main page shows a counter and two buttons: **Increment** and **Reset Counter**
+- **Error Simulation**: When the `INJECT_ERROR` app setting is set to `1`, clicking "Increment" 6 times triggers an HTTP 500 error
+- **Deployment Slots**: The "broken" slot has error injection enabled by default for testing failures without affecting production
+
+### Running Locally
+
+```bash
+cd src/SreAgentDemo
+
+# Run with error injection disabled
+dotnet run
+
+# Run with error injection enabled
+INJECT_ERROR=1 dotnet run
+```
+
+The app will be available at `http://localhost:5121` or `https://localhost:7159`.
+
+### Application Files
+
+| File                                            | Description                         |
+| ----------------------------------------------- | ----------------------------------- |
+| `src/SreAgentDemo/Program.cs`                   | Main app logic and web server setup |
+| `src/SreAgentDemo/appsettings.json`             | App configuration (default)         |
+| `src/SreAgentDemo/appsettings.Development.json` | Development environment config      |
+| `src/SreAgentDemo/SreAgentDemo.csproj`          | Project file                        |
+
 ## Infrastructure Deployment
 
 This repository includes Bicep Infrastructure as Code (IaC) to deploy the complete SRE Agent demo environment, including:
