@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": {
+      "value": "sreagent"
+    },
+    "location": {
+      "value": "swedencentral"
+    },
+    "resourceGroupName": {
+      "value": "rg-sre-agent-demo"
+    },
+    "tags": {
+      "value": {
+        "Environment": "Demo",
+        "Project": "SRE-Agent",
+        "Owner": "Platform-Team"
+      }
+    },
+    "appServiceSkuName": {
+      "value": "S1"
+    },
+    "runtimeStack": {
+      "value": "DOTNETCORE|9.0"
+    },
+    "externalGitRepoUrl": {
+      "value": "https://github.com/Azure-Samples/app-service-dotnet-agent-tutorial"
+    },
+    "externalGitBranch": {
+      "value": "main"
+    },
+    "enableApplicationInsights": {
+      "value": true
+    },
+    "enableChaosStudio": {
+      "value": true
+    },
+    "chaosExperimentDuration": {
+      "value": "PT10M"
+    },
+    "deployLogAnalytics": {
+      "value": true
+    }
+  }
+}
